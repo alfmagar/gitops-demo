@@ -1,0 +1,66 @@
+# Workflow to deploy demo environment
+name: 'Terraform - Plan DEV'
+
+#The workflow will be triggered when a pull request is opened against the main branch.
+#To maintain the integrity and security of the infrastructure, manual executions are not allowed.
+on:
+  push:
+    branches:
+      - feature/*
+
+jobs: 
+  plan_dev:
+    runs-on: ubuntu-latest
+    name: Terraform plan for DEV environment
+    permissions:
+      pull-requests: write
+    steps:
+    - uses: actions/checkout@v3
+    - uses: hashicorp/setup-terraform@v2
+      with:
+        terraform_wrapper: false
+        terraform_version: 1.5.2
+
+    - name: Terraform fmt
+      id: fmt
+      run: terraform fmt -check
+      working-directory: ./environments/dev
+      env:
+        ARM_CLIENT_ID: ${{ secrets.CLIENT_ID }}
+        ARM_CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+        ARM_SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
+        ARM_TENANT_ID: ${{ secrets.TENANT_ID }}
+      continue-on-error: false
+
+    - name: Terraform Init
+      id: init
+      run: terraform init
+      working-directory: ./environments/dev
+      env:
+        ARM_CLIENT_ID: ${{ secrets.CLIENT_ID }}
+        ARM_CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+        ARM_SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
+        ARM_TENANT_ID: ${{ secrets.TENANT_ID }}
+      continue-on-error: false
+
+    - name: Terraform Validate
+      id: validate
+      run: terraform validate -no-color
+      working-directory: ./environments/dev
+      env:
+        ARM_CLIENT_ID: ${{ secrets.CLIENT_ID }}
+        ARM_CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+        ARM_SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
+        ARM_TENANT_ID: ${{ secrets.TENANT_ID }}
+      continue-on-error: false
+
+    - name: Terraform Plan
+      id: plan
+      run: terraform plan -no-color
+      working-directory: ./environments/dev
+      env:
+        ARM_CLIENT_ID: ${{ secrets.CLIENT_ID }}
+        ARM_CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+        ARM_SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
+        ARM_TENANT_ID: ${{ secrets.TENANT_ID }}
+      continue-on-error: false
