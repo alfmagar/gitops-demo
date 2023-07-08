@@ -1,0 +1,40 @@
+# Workflow to destroy demo environment
+name: 'Terraform - Destroy PROD'
+
+on:
+  workflow_dispatch:
+
+jobs: 
+  destroy_prod:
+    runs-on: ubuntu-latest
+    name: Terraform destroy for PROD environment
+    permissions:
+      pull-requests: write
+    steps:
+    - uses: actions/checkout@v3
+    - uses: hashicorp/setup-terraform@v2
+      with:
+        terraform_wrapper: false
+        terraform_version: 1.5.2
+
+    - name: Terraform Init
+      id: init
+      run: terraform init
+      working-directory: ./environments/prod
+      env:
+        ARM_CLIENT_ID: ${{ secrets.CLIENT_ID }}
+        ARM_CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+        ARM_SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
+        ARM_TENANT_ID: ${{ secrets.TENANT_ID }}
+      continue-on-error: false
+
+    - name: Terraform Destroy
+      id: plan
+      run: terraform destroy -auto-approve
+      working-directory: ./environments/prod
+      env:
+        ARM_CLIENT_ID: ${{ secrets.CLIENT_ID }}
+        ARM_CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+        ARM_SUBSCRIPTION_ID: ${{ secrets.SUBSCRIPTION_ID }}
+        ARM_TENANT_ID: ${{ secrets.TENANT_ID }}
+      continue-on-error: false
