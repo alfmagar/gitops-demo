@@ -16,12 +16,6 @@ variable "storage_account_name" {
   type        = string
 }
 
-#Define internal variable for the optional secondary storage account name
-variable "storage_account_secondary_name" {
-  description = "Name of the secondary Storage account"
-  type        = string
-}
-
 #Define internal variable for the Storage private endpoint name
 variable "storage_private_endpoint_name" {
   description = "Name of the Storage private endpoint"

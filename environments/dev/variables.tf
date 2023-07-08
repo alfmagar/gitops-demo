@@ -61,11 +61,25 @@ variable "storage_private_endpoint_name" {
   default     = "pe-storage-demo-dev-westeu-001"
 }
 
+#Define the name for the secondary storage private endpoint
+variable "storage_private_endpoint_secondary_name" {
+  description = "Name of the storage private endpoint for the demo"
+  type        = string
+  default     = "pe-storage2-demo-dev-westeu-001"
+}
+
 #Define the name for the storage private endpoint connection
 variable "storage_private_endpoint_connection_name" {
   description = "Name of the storage private endpoint connection for the demo"
   type        = string
   default     = "pe-conn-storage-demo-dev-westeu-001"
+}
+
+#Define the name for the secondary storage private endpoint connection
+variable "storage_private_endpoint_secondary_connection_name" {
+  description = "Name of the storage private endpoint connection for the demo"
+  type        = string
+  default     = "pe-conn-storage2-demo-dev-westeu-001"
 }
 
 #Define the name for the first VM

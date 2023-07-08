@@ -49,9 +49,21 @@ module "storage" {
   location                                 = var.location
   resource_group_name                      = module.resource-group.resource_group_name
   storage_account_name                     = var.storage_account_name
-  storage_account_secondary_name           = var.storage_account_secondary_name
   storage_private_endpoint_name            = var.storage_private_endpoint_name
   storage_private_endpoint_connection_name = var.storage_private_endpoint_connection_name
+  compute_subnet_id                        = module.network.subnet_compute_id
+}
+
+
+# A new storage account is required!
+module "secondary_storage" {
+  source = "../../modules/storage"
+
+  location                                 = var.location
+  resource_group_name                      = module.resource-group.resource_group_name
+  storage_account_name                     = var.storage_account_secondary_name
+  storage_private_endpoint_name            = var.storage_private_endpoint_secondary_name
+  storage_private_endpoint_connection_name = var.storage_private_endpoint_secondary_connection_name
   compute_subnet_id                        = module.network.subnet_compute_id
 }
 
